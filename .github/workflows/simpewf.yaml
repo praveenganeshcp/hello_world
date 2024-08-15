@@ -15,11 +15,25 @@ on:
 jobs:
   example_job:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Print Inputs
+      - name: Check input number
+        id: check_input
         run: |
-          echo "ID: ${{ github.event.inputs.id }}"
-          echo "Name: ${{ github.event.inputs.name }}"
+          if [ "${{ github.event.inputs.id }}" -eq 1 ]; then
+            echo "Input is 1, throwing error..."
+            exit 1
+          else
+            echo "Input is not 1, proceeding with success."
+          fi
+
+      - name: Trigger API call on failure
+        if: failure()
+        run: echo "Input is 1, throwing error..."
+
+      - name: Trigger API call on success
+        if: success()
+        run: echo "Input is not 1, proceeding with success."
