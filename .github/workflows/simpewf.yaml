@@ -1,0 +1,25 @@
+name: Triggered Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: 'ID for the process'
+        required: true
+        type: string
+      name:
+        description: 'Name for the process'
+        required: true
+        type: string
+
+jobs:
+  example_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Print Inputs
+        run: |
+          echo "ID: ${{ github.event.inputs.id }}"
+          echo "Name: ${{ github.event.inputs.name }}"
