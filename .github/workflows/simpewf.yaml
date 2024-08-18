@@ -3,11 +3,11 @@ name: Triggered Workflow
 on:
   workflow_dispatch:
     inputs:
-      id:
+      requestId:
         description: 'ID for the process'
         required: true
         type: string
-      name:
+      commits:
         description: 'Name for the process'
         required: true
         type: string
