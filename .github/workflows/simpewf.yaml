@@ -28,7 +28,7 @@ jobs:
           do
             git cherry-pick -x $i
           done
-          git log
+          git status
           echo "cherrypick finished"
           git push origin $GITHUB_REF_NAME
           echo "pushed changes"
