@@ -25,9 +25,9 @@ jobs:
         run: |
           BRANCH_NAME=${{ github.ref }}
           BRANCH_NAME=${BRANCH_NAME##*/}
-          echo "${{ github.event.inputs.commits }}"
           COMMIT_SHA="${{ github.event.input.commits }}"
-          git cherry-pick -x $COMMIT_SHA
+          echo "commit is $COMMIT_SHA"
+          git cherry-pick $COMMIT_SHA
           git status
           echo "cherrypick finished"
           git push origin $BRANCH_NAME
