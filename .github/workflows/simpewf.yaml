@@ -23,6 +23,8 @@ jobs:
       - name: Check input number
         id: cherrypick
         run: |
+          BRANCH_NAME=${{ github.ref }}
+          BRANCH_NAME=${BRANCH_NAME##*/}
           echo "${{ github.event.inputs.commits }}"
           for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g" )
           do
@@ -30,7 +32,7 @@ jobs:
           done
           git status
           echo "cherrypick finished"
-          git push origin $GITHUB_REF_NAME
+          git push origin $BRANCH_NAME
           echo "pushed changes"
 
       - name: Trigger API call on failure
