@@ -25,7 +25,7 @@ jobs:
         run: |
           BRANCH_NAME=${{ github.ref }}
           BRANCH_NAME=${BRANCH_NAME##*/}
-          COMMIT_SHA="${{ github.event.input.commits }}"
+          COMMIT_SHA=${{ github.event.input.commits }}
           echo "commit is $COMMIT_SHA"
           git cherry-pick $COMMIT_SHA
           git status
