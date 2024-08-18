@@ -28,12 +28,13 @@ jobs:
           echo "${{ github.event.inputs.commits }}"
           for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g" )
           do
-            git cherry-pick -x $i
+            echo "commit is "
+            echo $i
           done
           git status
           echo "cherrypick finished"
           git push origin $BRANCH_NAME
-          echo "pushed changes"
+          echo "pushed changes to $BRANCH_NAME"
 
       - name: Trigger API call on failure
         if: failure()
