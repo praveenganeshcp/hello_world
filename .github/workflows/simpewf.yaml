@@ -24,17 +24,19 @@ jobs:
         id: cherrypick
         run: |
           echo "${{ github.event.inputs.commits }}"
-          echo "${{ github.event.inputs.requestId }}"
           for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g" )
           do
-            echo $i
+            git cherry-pick -x $i
           done
           git log
+          echo "cherrypick finished"
+          git push origin $GITHUB_REF_NAME
+          echo "pushed changes"
 
       - name: Trigger API call on failure
         if: failure()
-        run: echo "Input is 1, throwing error..."
+        run: echo "updating reuqest ${{ github.event.inputs.requestId }} to conflict"
 
       - name: Trigger API call on success
         if: success()
-        run: echo "Input is not 1, proceeding with success."
+        run: echo "updating reuqest ${{ github.event.inputs.requestId }} to success"
