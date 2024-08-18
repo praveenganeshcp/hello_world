@@ -44,7 +44,7 @@ jobs:
       - name: Trigger API call on failure
         if: failure()
         run: |
-          REQ_ID="${{ github.event.inputs.commits }}"
+          REQ_ID="${{ github.event.inputs.requestId }}"
           echo "req id is $REQ_ID"
           curl -X PATCH "http://65.2.169.224:3000/api/requests-manager/requests/$REQ_ID/status" \
           -H "Content-Type: application/json" \
@@ -53,7 +53,7 @@ jobs:
       - name: Trigger API call on success
         if: success()
         run: |
-          REQ_ID="${{ github.event.inputs.commits }}"
+          REQ_ID="${{ github.event.inputs.requestId }}"
           echo "req id is $REQ_ID"
           curl -X PATCH "http://65.2.169.224:3000/api/requests-manager/requests/$REQ_ID/status" \
           -H "Content-Type: application/json" \
