@@ -26,11 +26,7 @@ jobs:
           BRANCH_NAME=${{ github.ref }}
           BRANCH_NAME=${BRANCH_NAME##*/}
           echo "${{ github.event.inputs.commits }}"
-          for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g" )
-          do
-            echo "commit is "
-            echo $i
-          done
+          git cherry-pick -x "${{ github.event.input.commits }}"
           git status
           echo "cherrypick finished"
           git push origin $BRANCH_NAME
