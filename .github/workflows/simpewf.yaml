@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       requestId:
-        description: 'ID for the process'
+        description: 'Cherrypick Request ID'
         required: true
         type: string
       commits:
-        description: 'Name for the process'
+        description: 'commits to be cherrypicked'
         required: true
         type: string
 
@@ -21,14 +21,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check input number
-        id: check_input
+        id: cherrypick
         run: |
-          if [ "${{ github.event.inputs.id }}" -eq 1 ]; then
-            echo "Input is 1, throwing error..."
-            exit 1
-          else
-            echo "Input is not 1, proceeding with success."
-          fi
+          echo "${{ github.event.inputs.commits }}"
+          echo "${{ github.event.inputs.requestId }}"
+          for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g"
+          do
+            echo "${{ i }}"
+          done
+          git log
 
       - name: Trigger API call on failure
         if: failure()
