@@ -27,7 +27,7 @@ jobs:
           echo "${{ github.event.inputs.requestId }}"
           for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g"
           do
-            echo "${{ i }}"
+            echo $i
           done
           git log
 
