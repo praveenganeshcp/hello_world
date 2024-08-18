@@ -25,7 +25,7 @@ jobs:
         run: |
           echo "${{ github.event.inputs.commits }}"
           echo "${{ github.event.inputs.requestId }}"
-          for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g"
+          for i in $(echo ${{ github.event.input.commits }} | sed "s/,/ /g" )
           do
             echo $i
           done
