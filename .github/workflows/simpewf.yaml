@@ -46,7 +46,7 @@ jobs:
         run: |
           REQ_ID="${{ github.event.inputs.requestId }}"
           echo "req id is $REQ_ID"
-          curl -X PATCH "http://cherrypicker.mvp-by-praveen.click:3000/api/requests-manager/requests/$REQ_ID/status" \
+          curl -X PATCH "http://cherrypicker.mvp-by-praveen.click:4000/api/requests-manager/requests/$REQ_ID/status" \
           -H "Content-Type: application/json" \
           -d '{"isSuccess": false}'
 
@@ -55,6 +55,6 @@ jobs:
         run: |
           REQ_ID="${{ github.event.inputs.requestId }}"
           echo "req id is $REQ_ID"
-          curl -X PATCH "http://cherrypicker.mvp-by-praveen.click:3000/api/requests-manager/requests/$REQ_ID/status" \
+          curl -X PATCH "http://cherrypicker.mvp-by-praveen.click:4000/api/requests-manager/requests/$REQ_ID/status" \
           -H "Content-Type: application/json" \
           -d '{"isSuccess": true}'
