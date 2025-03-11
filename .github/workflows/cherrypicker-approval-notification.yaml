@@ -1,0 +1,29 @@
+name: Triggered Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      link:
+        description: 'Cherrypick Request ID'
+        required: true
+        type: string
+      message:
+        description: 'commits to be cherrypicked'
+        required: true
+        type: string
+
+jobs:
+  Cherrypick:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check input number
+        id: cherrypick
+        run: |
+          COMMIT_SHAS="${{ github.event.inputs.message }}"
+          echo "pushed changes to $COMMIT_SHAS"
