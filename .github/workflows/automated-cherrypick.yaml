@@ -29,17 +29,21 @@ jobs:
           BRANCH_NAME=${BRANCH_NAME##*/}
           git config --global user.email "praveenganesh7@gmail.com"
           git config --global user.name "Praveen Kumar"
-          COMMIT_SHAS="${{ github.event.inputs.commitIds }}"
-          IFS=',' read -r -a COMMIT_ARRAY <<< "$COMMIT_SHAS"
-
-          for COMMIT in "${COMMIT_ARRAY[@]}"; do
-            echo "Cherry-picking commit: $COMMIT"
-            git cherry-pick $COMMIT || exit 1
-          done
-          git status
-          echo "cherrypick finished"
-          git push origin $BRANCH_NAME
-          echo "pushed changes to $BRANCH_NAME"
+          if [ "${{ github.event.inputs.commitIds }}" != "skip" ]; then
+            COMMIT_SHAS="${{ github.event.inputs.commitIds }}"
+            IFS=',' read -r -a COMMIT_ARRAY <<< "$COMMIT_SHAS"
+  
+            for COMMIT in "${COMMIT_ARRAY[@]}"; do
+              echo "Cherry-picking commit: $COMMIT"
+              git cherry-pick $COMMIT || exit 1
+            done
+            
+            git status
+            echo "cherrypick finished"
+            git push origin $BRANCH_NAME
+            echo "pushed changes to $BRANCH_NAME"
+          fi
+          
 
       - name: Trigger API call on failure
         if: failure()
@@ -48,13 +52,19 @@ jobs:
           echo "req id is $REQ_ID"
           curl -X PATCH "http://cherrypicker.mvp-by-praveen.click:4000/api/requests-manager/requests/$REQ_ID/status" \
           -H "Content-Type: application/json" \
-          -d '{"isSuccess": false}'
+          -d '{"isSuccess": false, pickedWithConflicts: false}'
 
       - name: Trigger API call on success
         if: success()
         run: |
           REQ_ID="${{ github.event.inputs.requestId }}"
           echo "req id is $REQ_ID"
+           # Construct JSON payload
+          if [ "${{ github.event.inputs.commitIds }}" != "skip" ]; then
+            JSON_PAYLOAD='{"isSuccess": true, "pickedWithConflicts": true}'
+          else
+            JSON_PAYLOAD='{"isSuccess": true, "pickedWithConflicts": false}'
+          fi
           curl -X PATCH "http://cherrypicker.mvp-by-praveen.click:4000/api/requests-manager/requests/$REQ_ID/status" \
           -H "Content-Type: application/json" \
-          -d '{"isSuccess": true}'
+          -d "$JSON_PAYLOAD"
