@@ -1,0 +1,17 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class AddFrozenEnvColumnInRequestTable1741794292480 implements MigrationInterface {
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
+            ALTER TABLE "cherrypick_request_entity"
+            ADD COLUMN "frozen_env" TEXT NOT NULL DEFAULT 'QA';
+        `);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
+            ALTER TABLE "cherrypick_request_entity"
+            DROP COLUMN "frozen_env";
+        `);
+    }
+}
