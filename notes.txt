@@ -63,3 +63,44 @@ export class ChangeRequestStatusTypeFromEnumToString1741914790333 implements Mig
     }
 }
 
+
+
+
+import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from "typeorm";
+
+export class AddApprovedByColumnInRequest1741941182071 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Add the approved_by column
+    await queryRunner.addColumn("cherrypick_request_entity", 
+      new TableColumn({
+        name: "approved_by",
+        type: "integer",
+        isNullable: true, // Can be null before approval
+      })
+    );
+
+    // Add foreign key constraint
+    await queryRunner.createForeignKey("cherrypick_request_entity", 
+      new TableForeignKey({
+        columnNames: ["approved_by"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "user_entity",
+        onDelete: "SET NULL", // If the user is deleted, keep the approval info as null
+      })
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Remove foreign key constraint
+    const table = await queryRunner.getTable("cherrypick_request_entity");
+    const foreignKey = table?.foreignKeys.find(fk => fk.columnNames.includes("approved_by"));
+    if (foreignKey) {
+      await queryRunner.dropForeignKey("cherrypick_request_entity", foreignKey);
+    }
+
+    // Drop the column
+    await queryRunner.dropColumn("cherrypick_request_entity", "approved_by");
+  }
+}
+
+
