@@ -15,3 +15,22 @@ export class AddFrozenEnvColumnInRequestTable1741794292480 implements MigrationI
         `);
     }
 }
+
+
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class AddQaReleaseBranchInRepoTable1741792996568 implements MigrationInterface {
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
+            ALTER TABLE "vcs_repository_entity"
+            ADD COLUMN "qa_release_branch" TEXT NOT NULL DEFAULT '';
+        `);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
+            ALTER TABLE "vcs_repository_entity"
+            DROP COLUMN "qa_release_branch";
+        `);
+    }
+}
