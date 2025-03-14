@@ -34,3 +34,32 @@ export class AddQaReleaseBranchInRepoTable1741792996568 implements MigrationInte
         `);
     }
 }
+
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class ChangeRequestStatusTypeFromEnumToString1741914790333 implements MigrationInterface {
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        // Step 1: Alter the column type from ENUM to TEXT
+        await queryRunner.query(`
+            ALTER TABLE cherrypick_request_entity ALTER COLUMN status TYPE TEXT USING status::TEXT;
+        `);
+
+        // Step 2 (Optional): Drop the ENUM type if not used elsewhere
+        await queryRunner.query(`
+            DROP TYPE IF EXISTS cherrypick_status_enum;
+        `);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        // Step 1: Recreate ENUM type (Modify this list to match your original ENUM values)
+        await queryRunner.query(`
+        CREATE TYPE "cherrypick_status_enum" AS ENUM ('Waiting for Approval', 'InProgress', 'Completed', 'Conflict');
+        `);
+
+        // Step 2: Change column type back to ENUM
+        await queryRunner.query(`
+            ALTER TABLE cherrypick_request_entity ALTER COLUMN status TYPE cherrypick_status_enum USING status::cherrypick_status_enum;
+        `);
+    }
+}
+
