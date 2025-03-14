@@ -7,7 +7,7 @@ export class AddFrozenEnvColumnInRequestTable1741794292480 implements MigrationI
             ADD COLUMN "frozen_env" TEXT NOT NULL DEFAULT 'QA';
         `);
     }
-
+test
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             ALTER TABLE "cherrypick_request_entity"
