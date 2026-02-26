@@ -3,8 +3,8 @@ name: Triggered Workflow
 on:
   workflow_dispatch:
     inputs:
-      requestId:
-        description: 'Cherrypick Request ID'
+      requestIds:
+        description: 'Cherrypick Request IDs'
         required: true
         type: string
       commitIds:
